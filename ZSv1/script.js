@@ -125,3 +125,78 @@ registerCommand("desc", ["describe"], (args, state) => {
   }
   return item.desc;
 });
+
+registerCommand("go", ["move", "travel", "north", "south", "east", "west", "up", "down", "n", "s", "e", "w"], (args, state, commandName) => {
+  let direction = "";
+
+  // Map shorthand aliases to full directions
+  const aliasToDirection = {
+    "n": "north", "s": "south", "e": "east", "w": "west",
+    "north": "north", "south": "south", "east": "east", "west": "west",
+    "up": "up", "down": "down"
+  };
+
+  if (aliasToDirection[commandName]) {
+    direction = aliasToDirection[commandName];
+  } else if (args.length > 0) {
+    direction = args[0].toLowerCase();
+  } else {
+    return "Go where? (usage: go [direction] or north/south/east/west/up/down)";
+  }
+
+  const exits = {
+    "starting-room": ["north", "south", "east", "west"]
+  };
+
+  const availableExits = exits[state.currentLocation] || [];
+
+  if (!availableExits.includes(direction)) {
+    return `You can't go ${direction}. Available exits: ${availableExits.join(", ")}`;
+  }
+
+  return `You travel ${direction}. The fog grows thicker. You return to where you started.`;
+});
+
+registerCommand("menu", ["m"], (args, state) => {
+  return "[MENU]\n1. Resume\n2. Stats\n3. Quit\n(Not yet interactive)";
+});
+
+registerCommand("inspect", ["examine-object"], (args, state) => {
+  if (args.length === 0) {
+    return "Inspect what?";
+  }
+  return `You examine the ${args.join(" ")}. It is wreathed in shadow and mystery.`;
+});
+
+registerCommand("estus", ["drink", "heal"], (args, state) => {
+  const hpRestored = 30;
+  state.hp = Math.min(state.hp + hpRestored, state.maxHp);
+  return `You drink from the Estus Flask. HP restored by ${hpRestored}. Current HP: ${state.hp}/${state.maxHp}`;
+});
+
+registerCommand("roll", ["dodge", "dash"], (args, state) => {
+  return "You roll gracefully, the attack passing harmlessly by.";
+});
+
+registerCommand("block", ["defend", "parry"], (args, state) => {
+  return "You raise your shield. The impact staggers you, but you hold.";
+});
+
+registerCommand("strat", ["hint", "help-combat"], (args, state) => {
+  const hints = [
+    "Watch for the enemy's opening.",
+    "Its weakness lies in its haste.",
+    "Strike when it overextends.",
+    "The fog may conceal an advantage."
+  ];
+  return hints[Math.floor(Math.random() * hints.length)];
+});
+
+registerCommand("cheese", ["cheat", "win"], (args, state) => {
+  return "The enemy crumbles to dust. Your victory tastes hollow.";
+});
+
+registerCommand("bonfire", ["save", "rest"], (args, state) => {
+  const code = Math.random().toString(36).substring(2, 8).toUpperCase();
+  return `You rest at the bonfire. Your save code is: ${code}`;
+});
