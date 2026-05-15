@@ -200,3 +200,59 @@ registerCommand("bonfire", ["save", "rest"], (args, state) => {
   const code = Math.random().toString(36).substring(2, 8).toUpperCase();
   return `You rest at the bonfire. Your save code is: ${code}`;
 });
+
+// ===== OUTPUT RENDERER =====
+function renderOutput(playerInput, gameOutput) {
+  const history = document.getElementById("history");
+
+  const inputLine = document.createElement("div");
+  inputLine.textContent = `> ${playerInput}`;
+  history.appendChild(inputLine);
+
+  const outputLine = document.createElement("div");
+  outputLine.textContent = gameOutput;
+  history.appendChild(outputLine);
+
+  const spacer = document.createElement("div");
+  spacer.textContent = "";
+  history.appendChild(spacer);
+
+  history.scrollTop = history.scrollHeight;
+}
+
+// ===== INPUT HANDLER =====
+function initializeInputHandler() {
+  const input = document.getElementById("input");
+
+  input.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+
+      const playerInput = input.value.trim();
+      input.value = "";
+
+      if (playerInput.length === 0) {
+        return;
+      }
+
+      const output = dispatchCommand(playerInput);
+      renderOutput(playerInput, output);
+    }
+  });
+}
+
+// ===== INITIALIZATION =====
+document.addEventListener("DOMContentLoaded", () => {
+  initializeInputHandler();
+
+  const history = document.getElementById("history");
+  const welcome = document.createElement("div");
+  welcome.textContent = "Welcome to Zork Souls. Type 'help' for a list of commands.";
+  history.appendChild(welcome);
+
+  const spacer = document.createElement("div");
+  spacer.textContent = "";
+  history.appendChild(spacer);
+
+  document.getElementById("input").focus();
+});
