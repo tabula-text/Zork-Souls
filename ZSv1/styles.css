@@ -1,19 +1,52 @@
 body {
   background-color: #0a0a23;
-  font-family: 'Courier New';
+  color: #ffffff;
+  font-family: 'Courier New', monospace;
+  margin: 0;
+  padding: 0;
 }
 
-#text {
+.CLI {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.Toolbar {
+  flex-shrink: 0;
+  margin-bottom: 10px;
+  height: 0;
+}
+
+#history {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 10px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+#prompt-container {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+}
+
+#prompt-prefix {
+  margin-right: 5px;
+  flex-shrink: 0;
+}
+
+#input {
+  flex: 1;
   background-color: #0a0a23;
   color: #ffffff;
-  padding: 10px;
-}
-
-#game {
-  max-width: 500px;
-  max-height: 400px;
-  background-color: #ffffff;
-  color: #ffffff;
-  margin: 30px auto 0px;
-  padding: 10px;
+  border: none;
+  outline: none;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
 }
