@@ -1,0 +1,16 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e4]: Welcome to Zork Souls. Type 'help' for a list of commands.
+    - generic [ref=e8]: "> help"
+    - generic [ref=e9]: help, man, h, ? — list available commands look, l — describe current location go [direction] — move to an adjacent location north/n, south/s, east/e, west/w, up, down — shorthand for go inventory, inv, i — list items in inventory desc [name] — vague description of an item inspect [name] — zoom in on an object status — current hp, mp, stamina specs — character stats menu — open interactive menu estus — drink a healing potion roll — perform a dodge block — perform a block strat — get hints in combat cheese — instakill in combat bonfire — save and get a code
+    - generic [ref=e10]: "> look"
+    - generic [ref=e11]: You awaken in a stone chamber. Torchlight flickers ahead. The air is cold and damp.
+    - generic [ref=e12]: "> help"
+    - generic [ref=e13]: help, man, h, ? — list available commands look, l — describe current location go [direction] — move to an adjacent location north/n, south/s, east/e, west/w, up, down — shorthand for go inventory, inv, i — list items in inventory desc [name] — vague description of an item inspect [name] — zoom in on an object status — current hp, mp, stamina specs — character stats menu — open interactive menu estus — drink a healing potion roll — perform a dodge block — perform a block strat — get hints in combat cheese — instakill in combat bonfire — save and get a code
+    - generic [ref=e14]: "> inventory"
+    - generic [ref=e15]: "You carry: - Sword - Shield"
+    - generic [ref=e16]: "> desc Sword"
+    - generic [ref=e17]: A blade, worn from use. Once it gleamed.
+  - generic [ref=e5]:
+    - generic [ref=e6]: ">"
+    - textbox [active] [ref=e7]

@@ -1,0 +1,5 @@
+- generic [ref=e2]:
+  - generic [ref=e4]: Welcome to Zork Souls. Type 'help' for a list of commands.
+  - generic [ref=e5]:
+    - generic [ref=e6]: ">"
+    - textbox [active] [ref=e7]
