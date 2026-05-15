@@ -67,7 +67,7 @@ registerCommand("help", ["man", "h", "?"], (args, state) => {
     "help, man, h, ? — list available commands",
     "look, l — describe current location",
     "go [direction] — move to an adjacent location",
-    "north, south, east, west, up, down — shorthand for go",
+    "north/n, south/s, east/e, west/w, up, down — shorthand for go",
     "inventory, inv, i — list items in inventory",
     "desc [name] — vague description of an item",
     "inspect [name] — zoom in on an object",
@@ -161,7 +161,7 @@ registerCommand("menu", ["m"], (args, state) => {
   return "[MENU]\n1. Resume\n2. Stats\n3. Quit\n(Not yet interactive)";
 });
 
-registerCommand("inspect", ["examine-object"], (args, state) => {
+registerCommand("inspect", [], (args, state) => {
   if (args.length === 0) {
     return "Inspect what?";
   }
