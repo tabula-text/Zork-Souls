@@ -30,4 +30,6 @@ Open `ZSv1/Zork-Souls.html` directly in a browser, or serve it via any static HT
 
 ## Status
 
-The project is under active development from a freeCodeCamp course foundation. The game loop and core systems are not yet fully implemented in `script.js`.
+**CLI Foundation Complete.** See `CHANGELOG.md` for current progress and `TODOS.md` for what's next. The game loop is stubbed with placeholder commands; real systems (combat, dialogue, puzzles) come in Phase 2.
+
+Start here: `CHANGELOG.md` and `TODOS.md` — they track all progress and next steps.
