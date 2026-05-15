@@ -59,3 +59,69 @@ function dispatchCommand(input) {
     return `Error executing command: ${err.message}`;
   }
 }
+
+// ===== COMMAND HANDLERS =====
+
+registerCommand("help", ["man", "h", "?"], (args, state) => {
+  const commands = [
+    "help, man, h, ? — list available commands",
+    "look, l — describe current location",
+    "go [direction] — move to an adjacent location",
+    "north, south, east, west, up, down — shorthand for go",
+    "inventory, inv, i — list items in inventory",
+    "desc [name] — vague description of an item",
+    "inspect [name] — zoom in on an object",
+    "status — current hp, mp, stamina",
+    "specs — character stats",
+    "menu — open interactive menu",
+    "estus — drink a healing potion",
+    "roll — perform a dodge",
+    "block — perform a block",
+    "strat — get hints in combat",
+    "cheese — instakill in combat",
+    "bonfire — save and get a code"
+  ];
+  return commands.join("\n");
+});
+
+registerCommand("look", ["l", "examine"], (args, state) => {
+  const locations = {
+    "starting-room": "You awaken in a stone chamber. Torchlight flickers ahead. The air is cold and damp."
+  };
+  return locations[state.currentLocation] || "You see nothing remarkable.";
+});
+
+registerCommand("inventory", ["inv", "i"], (args, state) => {
+  if (state.inventory.length === 0) {
+    return "Your inventory is empty.";
+  }
+  return "You carry:\n" + state.inventory.map(item => `  - ${item.name}`).join("\n");
+});
+
+registerCommand("status", ["stat", "hp"], (args, state) => {
+  return `HP: ${state.hp}/${state.maxHp} | MP: ${state.mp}/${state.maxMp} | Stamina: ${state.stamina}/${state.maxStamina}`;
+});
+
+registerCommand("specs", ["stats", "character"], (args, state) => {
+  const s = state.stats;
+  return [
+    `Strength:     ${s.strength}`,
+    `Dexterity:    ${s.dexterity}`,
+    `Vitality:     ${s.vitality}`,
+    `Intelligence: ${s.intelligence}`,
+    `Faith:        ${s.faith}`,
+    `Luck:         ${s.luck}`
+  ].join("\n");
+});
+
+registerCommand("desc", ["describe"], (args, state) => {
+  if (args.length === 0) {
+    return "Describe what? (usage: desc [item name])";
+  }
+  const itemName = args.join(" ").toLowerCase();
+  const item = state.inventory.find(i => i.name.toLowerCase() === itemName);
+  if (!item) {
+    return `You don't have "${itemName}" in your inventory.`;
+  }
+  return item.desc;
+});
