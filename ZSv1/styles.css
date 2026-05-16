@@ -109,6 +109,24 @@
   100% { transform: translateY(2px); }
 }
 
+@keyframes zs-cinder-wink {
+  0%, 100% { opacity: 0; transform: translateY(0) scale(0.7); }
+  30%      { opacity: 1; transform: translateY(-1px) scale(1); }
+  70%      { opacity: 0.6; transform: translateY(-3px) scale(0.85); }
+}
+
+@keyframes zs-cinder-drift {
+  0%   { opacity: 0;   transform: translateY(0) scale(0.6); }
+  15%  { opacity: 0.9; transform: translateY(-3px) scale(1); }
+  80%  { opacity: 0.4; transform: translateY(-22px) scale(0.7); }
+  100% { opacity: 0;   transform: translateY(-30px) scale(0.5); }
+}
+
+@keyframes zs-ember-flicker {
+  0%, 100% { opacity: 0.95; }
+  50% { opacity: 0.78; }
+}
+
 /* ─── Base Styles ────────────────────────────────────────────────────────── */
 
 * { box-sizing: border-box; }
@@ -179,94 +197,141 @@ body.zs-flicker {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  padding: 16px;
-  gap: 10px;
+  padding: 0;
+  gap: 0;
   position: relative;
   z-index: 1;
 }
 
+/* ─── Toolbar ────────────────────────────────────────────────────────────── */
+
 .Toolbar {
   flex-shrink: 0;
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 24px;
   align-items: center;
-  justify-content: space-between;
-  height: auto;
-  padding: 8px 12px;
+  padding: 10px 16px;
   background-color: var(--zs-bg-panel);
-  border: 1px solid var(--zs-divider);
-  border-radius: 2px;
-  font-size: 12px;
+  border-bottom: 1px solid var(--zs-divider);
+  font-size: 11px;
+}
+
+.Toolbar-left {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
 }
 
 .Toolbar-title {
   color: var(--zs-accent);
-  font-weight: 500;
-  letter-spacing: 2px;
-  text-transform: uppercase;
+  letter-spacing: 4px;
+  font-weight: 600;
+  font-size: 13px;
+  text-shadow: 0 0 8px var(--zs-accent-glow);
 }
 
-.Toolbar-group {
+.Toolbar-version {
+  color: var(--zs-text-faint);
+  font-size: 9px;
+  letter-spacing: 1.5px;
+}
+
+.Toolbar-center {
   display: flex;
-  gap: 16px;
+  justify-content: center;
+  gap: 14px;
   align-items: center;
 }
 
-.HUD-bar {
+.Toolbar-right {
   display: flex;
+  gap: 10px;
+  align-items: center;
+  color: var(--zs-text-dim);
+}
+
+.Toolbar-audio {
+  color: var(--zs-text-dim);
+  font-size: 11px;
+}
+
+/* ─── HUD chips (ASCII bars with glyph icons) ───────────────────────────── */
+
+.HUD-chip {
+  display: inline-flex;
   align-items: center;
   gap: 6px;
   font-size: 11px;
 }
 
-.HUD-label {
-  color: var(--zs-text-dim);
-  min-width: 24px;
+.HUD-icon {
+  font-size: 12px;
 }
 
-.HUD-track {
-  width: 80px;
-  height: 8px;
-  background-color: var(--zs-bg-inset);
-  border: 1px solid var(--zs-divider);
-  border-radius: 1px;
-  overflow: hidden;
-  position: relative;
-}
+.HUD-chip[data-stat="hp"] .HUD-icon,
+.HUD-chip[data-stat="hp"] .HUD-bar-fill { color: var(--zs-hp); }
 
-.HUD-fill {
-  height: 100%;
-  background-color: var(--zs-hp);
-  border-radius: 1px;
-  transition: width 200ms ease-out;
-}
+.HUD-chip[data-stat="mp"] .HUD-icon,
+.HUD-chip[data-stat="mp"] .HUD-bar-fill { color: var(--zs-mp); }
 
-.HUD-value {
+.HUD-chip[data-stat="stamina"] .HUD-icon,
+.HUD-chip[data-stat="stamina"] .HUD-bar-fill { color: var(--zs-stamina); }
+
+.HUD-bar-ascii {
+  letter-spacing: -1px;
+  font-size: 12px;
+  line-height: 1;
   font-variant-numeric: tabular-nums;
-  min-width: 24px;
+}
+
+.HUD-bar-fill {
+  /* Color set above per-stat */
+}
+
+.HUD-bar-empty {
+  color: var(--zs-text-fog);
+}
+
+.HUD-readout {
+  color: var(--zs-text);
+  font-variant-numeric: tabular-nums;
+  min-width: 44px;
   text-align: right;
 }
 
+.HUD-faint {
+  color: var(--zs-text-faint);
+}
+
+.HUD-sep {
+  color: var(--zs-divider);
+}
+
+/* ─── Theme switcher ─────────────────────────────────────────────────────── */
+
 .Theme-switcher {
   display: flex;
-  gap: 6px;
+  gap: 4px;
   align-items: center;
 }
 
 .Theme-button {
-  padding: 4px 8px;
-  background-color: var(--zs-bg-inset);
+  padding: 3px 7px;
+  background-color: transparent;
   color: var(--zs-text-dim);
-  border: 1px solid var(--zs-divider);
+  border: 1px solid transparent;
   border-radius: 2px;
   font-family: 'IBM Plex Mono', ui-monospace, monospace;
   font-size: 11px;
   cursor: pointer;
   transition: all 150ms;
+  letter-spacing: 0.5px;
 }
 
 .Theme-button:hover {
   color: var(--zs-text);
-  border-color: var(--zs-accent);
+  border-color: var(--zs-divider);
 }
 
 .Theme-button.active {
@@ -275,8 +340,37 @@ body.zs-flicker {
   border-color: var(--zs-accent);
 }
 
+.Theme-button.active::before {
+  content: '● ';
+  color: var(--zs-accent);
+}
+
 .Theme-button[data-locked]::after {
   content: ' 🔒';
+  font-size: 9px;
+  opacity: 0.6;
+}
+
+/* ─── Location banner ────────────────────────────────────────────────────── */
+
+.Location-banner {
+  flex-shrink: 0;
+  padding: 14px 22px 4px;
+}
+
+.Location-title {
+  color: var(--zs-accent);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  font-size: 11px;
+  margin-bottom: 4px;
+  text-shadow: 0 0 4px var(--zs-accent-glow);
+}
+
+.Location-meta {
+  color: var(--zs-text-faint);
+  font-size: 10px;
+  letter-spacing: 1px;
 }
 
 /* ─── History ────────────────────────────────────────────────────────────── */
@@ -285,15 +379,17 @@ body.zs-flicker {
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 12px;
-  background-color: var(--zs-bg-inset);
-  border: 1px solid var(--zs-divider);
-  border-radius: 2px;
+  padding: 8px 22px 14px;
+  background-color: transparent;
+  border: none;
   white-space: pre-wrap;
   word-wrap: break-word;
   font-size: 13px;
-  line-height: 1.5;
+  line-height: 1.55;
   color: var(--zs-text);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 #history::-webkit-scrollbar {
@@ -315,7 +411,7 @@ body.zs-flicker {
 
 .history-echo {
   color: var(--zs-text-dim);
-  margin-bottom: 4px;
+  margin: 0;
 }
 
 .history-echo::before {
@@ -324,33 +420,41 @@ body.zs-flicker {
 
 .history-narrative {
   color: var(--zs-text);
-  margin-bottom: 6px;
+  margin: 0;
 }
 
 .history-system {
   color: var(--zs-accent);
-  margin-bottom: 6px;
+  margin: 0;
+  text-shadow: 0 0 4px var(--zs-accent-glow);
 }
 
 .history-system::before {
   content: '[ system ] ';
   color: var(--zs-text-faint);
   font-size: 11px;
+  text-shadow: none;
 }
 
 .history-damage {
   color: var(--zs-danger);
-  margin-bottom: 4px;
+  margin: 0;
 }
 
 .history-error {
   color: var(--zs-danger);
-  margin-bottom: 4px;
+  margin: 0;
 }
 
 .history-error::before {
   content: '✗ ';
   margin-right: 4px;
+}
+
+.history-italic {
+  color: var(--zs-text-faint);
+  font-style: italic;
+  margin: 0;
 }
 
 .history-fog {
@@ -359,25 +463,37 @@ body.zs-flicker {
   margin: 8px 0 0 0;
 }
 
+.history-bonfire {
+  margin: 14px 0;
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.1;
+  letter-spacing: 0;
+  white-space: pre;
+  color: var(--zs-text);
+}
+
 /* ─── Prompt ─────────────────────────────────────────────────────────────── */
 
 #prompt-container {
   display: flex;
   flex-shrink: 0;
   align-items: center;
-  gap: 0;
-  padding: 8px 12px;
-  background-color: var(--zs-bg-inset);
-  border: 1px solid var(--zs-divider);
-  border-radius: 2px;
+  gap: 8px;
+  padding: 12px 22px;
+  background-color: transparent;
+  border: none;
+  border-top: 1px solid var(--zs-divider);
+  border-radius: 0;
   height: auto;
 }
 
 #prompt-prefix {
   color: var(--zs-prompt);
-  margin-right: 2px;
+  margin-right: 0;
   flex-shrink: 0;
   font-weight: 400;
+  text-shadow: 0 0 4px var(--zs-accent-glow);
 }
 
 #input {
@@ -493,6 +609,110 @@ body.zs-flicker {
   color: var(--zs-text-fog);
 }
 
+/* ─── Bonfire ASCII Visual ──────────────────────────────────────────────── */
+
+/* Bonfire uses universal warm palette regardless of theme (eternal flame). */
+.Bonfire-visual {
+  --b-ember1: #fff1c2;
+  --b-ember2: #ffc56b;
+  --b-ember3: #f4a040;
+  --b-ember4: #c46a18;
+  --b-ember5: #3a1a04;
+  --b-steel-hi: #d4ca9b;
+  --b-steel: #8a6f48;
+  --b-steel-lo: #3a2614;
+  --b-glow: rgba(244, 160, 64, 0.55);
+
+  position: relative;
+  display: block;
+  width: 100%;
+  max-width: 380px;
+  margin: 18px auto;
+  padding: 12px 0;
+  min-height: 220px;
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+}
+
+.Bonfire-stage {
+  position: relative;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  overflow: hidden;
+}
+
+.Bonfire-halo {
+  position: absolute;
+  left: 50%;
+  bottom: 8%;
+  width: 70%;
+  height: 40%;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse at 50% 80%, var(--b-glow) 0%, transparent 70%);
+  filter: blur(8px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.Bonfire-sword {
+  position: absolute;
+  left: 50%;
+  bottom: calc(8% + 14px);
+  transform: translateX(-50%) rotate(-6deg);
+  transform-origin: 50% 100%;
+  z-index: 2;
+  margin: 0;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.0;
+  text-align: center;
+  text-shadow: 0 0 1px rgba(0, 0, 0, 0.6);
+}
+
+.Bonfire-sword-row { display: block; }
+.Bonfire-sword-row.lo { color: var(--b-steel-lo); }
+.Bonfire-sword-row.mid { color: var(--b-steel); }
+.Bonfire-sword-row.hi { color: var(--b-steel-hi); }
+
+.Bonfire-flame {
+  margin: 0;
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 1.1;
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 0 6px var(--b-glow), 0 0 14px var(--b-glow);
+  white-space: pre;
+}
+
+.Bonfire-flame .row1 { color: var(--b-ember2); }
+.Bonfire-flame .row2 { color: var(--b-ember3); }
+.Bonfire-flame .row3 { color: var(--b-ember4); }
+.Bonfire-flame .row4 { color: var(--b-ember5); }
+
+.Bonfire-cinders {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.Bonfire-cinder {
+  position: absolute;
+  text-shadow: 0 0 4px var(--b-glow), 0 0 8px var(--b-glow);
+  will-change: opacity, transform;
+}
+
+.Bonfire-caption {
+  font-size: 11px;
+  color: var(--zs-text-faint);
+  font-style: italic;
+  text-align: center;
+  margin-top: 8px;
+}
+
 /* ─── Utility ────────────────────────────────────────────────────────────── */
 
 .zs-italic {
@@ -501,4 +721,8 @@ body.zs-flicker {
 
 .zs-bold {
   font-weight: 600;
+}
+
+.zs-center {
+  text-align: center;
 }

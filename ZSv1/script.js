@@ -21,7 +21,8 @@ const gameState = {
   },
   inCombat: false,
   currentEnemy: null,
-  currentTheme: "bonfire"
+  currentTheme: "bonfire",
+  turn: 0
 };
 
 // ===== THEME SYSTEM =====
@@ -67,22 +68,140 @@ function initializeThemeSwitcher() {
 }
 
 // ===== HUD SYSTEM =====
-function updateHUDBar(elementId, current, max, color = null) {
-  const barElement = document.getElementById(elementId);
-  if (!barElement) return;
+const HUD_BAR_SLOTS = 10;
 
-  const percentage = Math.max(0, Math.min(100, (current / max) * 100));
-  barElement.style.width = percentage + "%";
+function renderAsciiBar(elementId, current, max) {
+  const el = document.getElementById(elementId);
+  if (!el) return;
 
-  if (color) {
-    barElement.style.backgroundColor = color;
-  }
+  const pct = Math.max(0, Math.min(1, current / max));
+  const filled = Math.round(pct * HUD_BAR_SLOTS);
+
+  el.textContent = "";
+  const filledSpan = document.createElement("span");
+  filledSpan.className = "HUD-bar-fill";
+  filledSpan.textContent = "█".repeat(filled);
+  el.appendChild(filledSpan);
+
+  const emptySpan = document.createElement("span");
+  emptySpan.className = "HUD-bar-empty";
+  emptySpan.textContent = "░".repeat(HUD_BAR_SLOTS - filled);
+  el.appendChild(emptySpan);
 }
 
 function updateAllHUDBars() {
-  updateHUDBar("hp-bar", gameState.hp, gameState.maxHp, "var(--zs-hp)");
+  renderAsciiBar("hp-ascii", gameState.hp, gameState.maxHp);
+  renderAsciiBar("mp-ascii", gameState.mp, gameState.maxMp);
+  renderAsciiBar("stamina-ascii", gameState.stamina, gameState.maxStamina);
+
   document.getElementById("hp-current").textContent = gameState.hp;
   document.getElementById("hp-max").textContent = gameState.maxHp;
+  document.getElementById("mp-current").textContent = gameState.mp;
+  document.getElementById("mp-max").textContent = gameState.maxMp;
+  document.getElementById("stamina-current").textContent = gameState.stamina;
+  document.getElementById("stamina-max").textContent = gameState.maxStamina;
+}
+
+// ===== LOCATION BANNER =====
+const LOCATION_TITLES = {
+  "starting-room": { title: "Undead Asylum", meta: "fog descending" }
+};
+
+function updateLocationBanner() {
+  const loc = LOCATION_TITLES[gameState.currentLocation] || { title: "—", meta: "" };
+  const titleEl = document.getElementById("location-title");
+  const metaEl = document.getElementById("location-meta");
+  if (titleEl) titleEl.textContent = `── ${loc.title} ──`;
+  if (metaEl) metaEl.textContent = `turn ${gameState.turn} · ${loc.meta}`;
+}
+
+// ===== BONFIRE ASCII VISUAL =====
+const BONFIRE_SWORD = [
+  { txt: "  ◉  ", tone: "lo" },
+  { txt: "  │  ", tone: "lo" },
+  { txt: "──┴──", tone: "lo" },
+  { txt: "  ╲  ", tone: "lo" },
+  { txt: "  )( ", tone: "lo" },
+  { txt: "  ╲  ", tone: "mid" },
+  { txt: "  )( ", tone: "mid" },
+  { txt: "  ╲  ", tone: "mid" },
+  { txt: "  )( ", tone: "mid" },
+  { txt: "  ╲  ", tone: "hi" },
+  { txt: "  │  ", tone: "hi" },
+  { txt: "  │  ", tone: "hi" }
+];
+
+const BONFIRE_FLAME_ROWS = [
+  { cls: "row1", txt: "      ╮       _       _       ╭" },
+  { cls: "row2", txt: "     ╯ ))   ╮(  ╲   ╱  )╭   (( ╲" },
+  { cls: "row3", txt: "   ─((─((─((─((─((─))─))─))─))──))" },
+  { cls: "row4", txt: "   ════════════════════════════════" }
+];
+
+const BONFIRE_CINDERS = [
+  { left: "28%", bottom: "14%", char: "·", kind: "wink", size: 11, delay: 0.0, dur: 1.8 },
+  { left: "38%", bottom: "22%", char: "⚹", kind: "drift", size: 10, delay: 0.8, dur: 3.2 },
+  { left: "46%", bottom: "12%", char: "·", kind: "wink", size: 13, delay: 1.4, dur: 1.6 },
+  { left: "54%", bottom: "26%", char: "✧", kind: "drift", size: 9, delay: 2.1, dur: 3.8 },
+  { left: "62%", bottom: "16%", char: "·", kind: "wink", size: 12, delay: 0.4, dur: 2.0 },
+  { left: "70%", bottom: "20%", char: "⚹", kind: "drift", size: 10, delay: 2.6, dur: 3.4 }
+];
+
+function renderBonfireVisual() {
+  const visual = document.createElement("div");
+  visual.className = "Bonfire-visual";
+
+  const stage = document.createElement("div");
+  stage.className = "Bonfire-stage";
+
+  const halo = document.createElement("div");
+  halo.className = "Bonfire-halo";
+  stage.appendChild(halo);
+
+  const sword = document.createElement("pre");
+  sword.className = "Bonfire-sword";
+  BONFIRE_SWORD.forEach(row => {
+    const r = document.createElement("span");
+    r.className = `Bonfire-sword-row ${row.tone}`;
+    r.textContent = row.txt;
+    sword.appendChild(r);
+  });
+  stage.appendChild(sword);
+
+  const cinders = document.createElement("div");
+  cinders.className = "Bonfire-cinders";
+  BONFIRE_CINDERS.forEach(c => {
+    const span = document.createElement("span");
+    span.className = "Bonfire-cinder";
+    span.textContent = c.char;
+    span.style.left = c.left;
+    span.style.bottom = c.bottom;
+    span.style.fontSize = c.size + "px";
+    span.style.color = c.kind === "wink" ? "var(--b-ember2)" : "var(--b-ember1)";
+    span.style.animation = `zs-cinder-${c.kind} ${c.dur}s ease-in-out ${c.delay}s infinite`;
+    cinders.appendChild(span);
+  });
+  stage.appendChild(cinders);
+
+  const flame = document.createElement("pre");
+  flame.className = "Bonfire-flame";
+  BONFIRE_FLAME_ROWS.forEach(row => {
+    const r = document.createElement("span");
+    r.className = row.cls;
+    r.style.display = "block";
+    r.textContent = row.txt;
+    flame.appendChild(r);
+  });
+  stage.appendChild(flame);
+
+  visual.appendChild(stage);
+
+  const caption = document.createElement("div");
+  caption.className = "Bonfire-caption";
+  caption.textContent = "a coiled sword stabbed through ash. the flame waits, knowing.";
+  visual.appendChild(caption);
+
+  return visual;
 }
 
 // ===== COMMAND REGISTRY =====
@@ -119,11 +238,19 @@ function dispatchCommand(input) {
 
   const command = commandRegistry[commandName];
   try {
-    const output = command.handler(args, gameState, commandName);
-    return { output, className: "history-narrative" };
+    const result = command.handler(args, gameState, commandName);
+    // Handler may return either a string or an object { text, className, showBonfire }
+    if (typeof result === "string") {
+      return { output: result, className: "history-narrative" };
+    }
+    return {
+      output: result.text,
+      className: result.className || "history-narrative",
+      showBonfire: result.showBonfire || false
+    };
   } catch (err) {
     return {
-      output: `✗ Error executing command: ${err.message}`,
+      output: `Error executing command: ${err.message}`,
       className: "history-error"
     };
   }
@@ -267,7 +394,14 @@ registerCommand("cheese", ["cheat", "win"], (args, state) => {
 
 registerCommand("bonfire", ["save", "rest"], (args, state) => {
   const code = Math.random().toString(36).substring(2, 8).toUpperCase();
-  return `You rest at the bonfire. Your save code is: ${code}`;
+  // Heal on rest
+  state.hp = state.maxHp;
+  state.stamina = state.maxStamina;
+  return {
+    text: `You kindle the bonfire. HP restored. (Estus: 5/5)  ·  save code: ${code}`,
+    className: "history-system",
+    showBonfire: true
+  };
 });
 
 // ===== OUTPUT RENDERER =====
@@ -284,13 +418,14 @@ function renderOutput(playerInput, gameOutput, options = {}) {
   outputLine.textContent = gameOutput;
   history.appendChild(outputLine);
 
-  const spacer = document.createElement("div");
-  spacer.textContent = "";
-  history.appendChild(spacer);
+  if (options.showBonfire) {
+    history.appendChild(renderBonfireVisual());
+  }
 
   history.scrollTop = history.scrollHeight;
 
   updateAllHUDBars();
+  updateLocationBanner();
 }
 
 // ===== INPUT HANDLER =====
@@ -317,8 +452,12 @@ function initializeInputHandler() {
         return;
       }
 
+      gameState.turn += 1;
       const result = dispatchCommand(playerInput);
-      renderOutput(playerInput, result.output, { className: result.className });
+      renderOutput(playerInput, result.output, {
+        className: result.className,
+        showBonfire: result.showBonfire
+      });
     }
   });
 }
@@ -328,16 +467,13 @@ document.addEventListener("DOMContentLoaded", () => {
   initializeThemeSwitcher();
   initializeInputHandler();
   updateAllHUDBars();
+  updateLocationBanner();
 
   const history = document.getElementById("history");
   const welcome = document.createElement("div");
-  welcome.className = "zs-fog-text zs-italic";
+  welcome.className = "history-italic";
   welcome.textContent = "Welcome, Undead. You awaken in a familiar darkness. Type 'help' for guidance.";
   history.appendChild(welcome);
-
-  const spacer = document.createElement("div");
-  spacer.textContent = "";
-  history.appendChild(spacer);
 
   document.getElementById("input").focus();
 });

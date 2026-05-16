@@ -9,27 +9,48 @@
   <body class="zs-bonfire">
     <div class="CLI">
       <div class="Toolbar">
-        <div class="Toolbar-title">⚹ ZORK SOULS</div>
-        <div class="Toolbar-group">
-          <div class="Theme-switcher">
-            <button class="Theme-button active" data-theme="bonfire">Bonfire</button>
-            <button class="Theme-button" data-theme="hollow">Hollow</button>
-            <button class="Theme-button" data-theme="abyss" data-locked>Abyss</button>
-          </div>
+        <div class="Toolbar-left">
+          <span class="Toolbar-title">ZORK&nbsp;SOULS</span>
+          <span class="Toolbar-version">v0.1</span>
         </div>
-        <div class="Toolbar-group">
-          <div class="HUD-bar">
-            <span class="HUD-label">HP</span>
-            <div class="HUD-track">
-              <div class="HUD-fill" style="width: 100%;" id="hp-bar"></div>
-            </div>
-            <span class="HUD-value"><span id="hp-current">100</span>/<span id="hp-max">100</span></span>
+        <div class="Toolbar-center">
+          <span class="HUD-chip" data-stat="hp">
+            <span class="HUD-icon">♥</span>
+            <span class="HUD-bar-ascii" id="hp-ascii"></span>
+            <span class="HUD-readout"><span id="hp-current">100</span><span class="HUD-faint">/<span id="hp-max">100</span></span></span>
+          </span>
+          <span class="HUD-sep">│</span>
+          <span class="HUD-chip" data-stat="mp">
+            <span class="HUD-icon">✦</span>
+            <span class="HUD-bar-ascii" id="mp-ascii"></span>
+            <span class="HUD-readout"><span id="mp-current">50</span><span class="HUD-faint">/<span id="mp-max">50</span></span></span>
+          </span>
+          <span class="HUD-sep">│</span>
+          <span class="HUD-chip" data-stat="stamina">
+            <span class="HUD-icon">◆</span>
+            <span class="HUD-bar-ascii" id="stamina-ascii"></span>
+            <span class="HUD-readout"><span id="stamina-current">100</span><span class="HUD-faint">/<span id="stamina-max">100</span></span></span>
+          </span>
+        </div>
+        <div class="Toolbar-right">
+          <span class="Toolbar-audio">♪ <span class="HUD-faint">on</span></span>
+          <span class="HUD-sep">│</span>
+          <div class="Theme-switcher">
+            <button class="Theme-button active" data-theme="bonfire">bonfire</button>
+            <button class="Theme-button" data-theme="hollow">hollow</button>
+            <button class="Theme-button" data-theme="abyss" data-locked>abyss</button>
           </div>
         </div>
       </div>
+
+      <div class="Location-banner">
+        <div class="Location-title" id="location-title">── Undead Asylum ──</div>
+        <div class="Location-meta" id="location-meta">turn 1 · fog descending</div>
+      </div>
+
       <div id="history"></div>
       <div id="prompt-container" class="idle">
-        <span id="prompt-prefix">> </span>
+        <span id="prompt-prefix">&gt;</span>
         <input id="input" type="text" autofocus spellcheck="false" placeholder="">
       </div>
     </div>
