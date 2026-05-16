@@ -20,8 +20,70 @@ const gameState = {
     luck: 8
   },
   inCombat: false,
-  currentEnemy: null
+  currentEnemy: null,
+  currentTheme: "bonfire"
 };
+
+// ===== THEME SYSTEM =====
+const THEMES = {
+  bonfire: { id: "bonfire", name: "Bonfire", locked: false, lore: "Light a flame against the dark" },
+  hollow: { id: "hollow", name: "Hollow", locked: false, lore: "Dust on parchment, dust on bone" },
+  abyss: { id: "abyss", name: "Abyss", locked: true, lore: "Defeat the Four Kings at the bottom of New Londo" }
+};
+
+function setTheme(themeId) {
+  const theme = THEMES[themeId];
+  if (!theme) return;
+
+  gameState.currentTheme = themeId;
+  document.body.className = `zs-${themeId}`;
+  localStorage.setItem("zorkSoulsTheme", themeId);
+
+  // Update theme button states
+  document.querySelectorAll(".Theme-button").forEach(btn => {
+    btn.classList.remove("active");
+    if (btn.dataset.theme === themeId) {
+      btn.classList.add("active");
+    }
+  });
+}
+
+function initializeThemeSwitcher() {
+  const savedTheme = localStorage.getItem("zorkSoulsTheme") || "bonfire";
+  setTheme(savedTheme);
+
+  document.querySelectorAll(".Theme-button").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const themeId = btn.dataset.theme;
+      const theme = THEMES[themeId];
+
+      if (btn.hasAttribute("data-locked") && theme.locked) {
+        alert("This theme is locked. " + (theme.lore || ""));
+        return;
+      }
+      setTheme(themeId);
+    });
+  });
+}
+
+// ===== HUD SYSTEM =====
+function updateHUDBar(elementId, current, max, color = null) {
+  const barElement = document.getElementById(elementId);
+  if (!barElement) return;
+
+  const percentage = Math.max(0, Math.min(100, (current / max) * 100));
+  barElement.style.width = percentage + "%";
+
+  if (color) {
+    barElement.style.backgroundColor = color;
+  }
+}
+
+function updateAllHUDBars() {
+  updateHUDBar("hp-bar", gameState.hp, gameState.maxHp, "var(--zs-hp)");
+  document.getElementById("hp-current").textContent = gameState.hp;
+  document.getElementById("hp-max").textContent = gameState.maxHp;
+}
 
 // ===== COMMAND REGISTRY =====
 const commandRegistry = {};
@@ -42,21 +104,28 @@ function dispatchCommand(input) {
   const tokens = input.trim().split(/\s+/).filter(t => t.length > 0);
 
   if (tokens.length === 0) {
-    return "";
+    return { output: "", className: "history-narrative" };
   }
 
   const commandName = tokens[0].toLowerCase();
   const args = tokens.slice(1);
 
   if (!commandRegistry[commandName]) {
-    return `Unknown command: "${commandName}". Type "help" for a list of commands.`;
+    return {
+      output: `✗ Unknown command: "${commandName}". Type "help" for a list of commands.`,
+      className: "history-error"
+    };
   }
 
   const command = commandRegistry[commandName];
   try {
-    return command.handler(args, gameState, commandName);
+    const output = command.handler(args, gameState, commandName);
+    return { output, className: "history-narrative" };
   } catch (err) {
-    return `Error executing command: ${err.message}`;
+    return {
+      output: `✗ Error executing command: ${err.message}`,
+      className: "history-error"
+    };
   }
 }
 
@@ -202,14 +271,16 @@ registerCommand("bonfire", ["save", "rest"], (args, state) => {
 });
 
 // ===== OUTPUT RENDERER =====
-function renderOutput(playerInput, gameOutput) {
+function renderOutput(playerInput, gameOutput, options = {}) {
   const history = document.getElementById("history");
 
   const inputLine = document.createElement("div");
-  inputLine.textContent = `> ${playerInput}`;
+  inputLine.className = "history-echo";
+  inputLine.textContent = playerInput;
   history.appendChild(inputLine);
 
   const outputLine = document.createElement("div");
+  outputLine.className = options.className || "history-narrative";
   outputLine.textContent = gameOutput;
   history.appendChild(outputLine);
 
@@ -218,11 +289,22 @@ function renderOutput(playerInput, gameOutput) {
   history.appendChild(spacer);
 
   history.scrollTop = history.scrollHeight;
+
+  updateAllHUDBars();
 }
 
 // ===== INPUT HANDLER =====
 function initializeInputHandler() {
   const input = document.getElementById("input");
+  const promptContainer = document.getElementById("prompt-container");
+
+  input.addEventListener("focus", () => {
+    promptContainer.classList.remove("idle");
+  });
+
+  input.addEventListener("blur", () => {
+    promptContainer.classList.add("idle");
+  });
 
   input.addEventListener("keydown", (event) => {
     if (event.key === "Enter") {
@@ -235,19 +317,22 @@ function initializeInputHandler() {
         return;
       }
 
-      const output = dispatchCommand(playerInput);
-      renderOutput(playerInput, output);
+      const result = dispatchCommand(playerInput);
+      renderOutput(playerInput, result.output, { className: result.className });
     }
   });
 }
 
 // ===== INITIALIZATION =====
 document.addEventListener("DOMContentLoaded", () => {
+  initializeThemeSwitcher();
   initializeInputHandler();
+  updateAllHUDBars();
 
   const history = document.getElementById("history");
   const welcome = document.createElement("div");
-  welcome.textContent = "Welcome to Zork Souls. Type 'help' for a list of commands.";
+  welcome.className = "zs-fog-text zs-italic";
+  welcome.textContent = "Welcome, Undead. You awaken in a familiar darkness. Type 'help' for guidance.";
   history.appendChild(welcome);
 
   const spacer = document.createElement("div");

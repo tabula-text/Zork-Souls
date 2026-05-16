@@ -1,52 +1,504 @@
-body {
-  background-color: #0a0a23;
-  color: #ffffff;
-  font-family: 'Courier New', monospace;
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap');
+
+/* ─── Theme Definition ────────────────────────────────────────────────────── */
+
+/* Bonfire (default) — warm amber on charcoal */
+:root, .zs-bonfire {
+  --zs-bg:           #14100c;
+  --zs-bg-elevated:  #1d1610;
+  --zs-bg-panel:     #221a13;
+  --zs-bg-inset:     #0d0a07;
+  --zs-divider:      #3a2c1d;
+  --zs-text:         #ede4d0;
+  --zs-text-dim:     #ac9876;
+  --zs-text-faint:   #6b5a42;
+  --zs-text-fog:     #3f352a;
+  --zs-accent:       #f4a040;
+  --zs-accent-glow:  rgba(244,160,64,0.55);
+  --zs-accent-deep:  #c46a18;
+  --zs-accent-soft:  #5e3a1c;
+  --zs-danger:       #d05545;
+  --zs-success:      #9bbf58;
+  --zs-warning:      #e9c46a;
+  --zs-prompt:       #f4a040;
+  --zs-cursor:       #ede4d0;
+  --zs-hp:           #d05545;
+  --zs-mp:           #6aa9e0;
+  --zs-stamina:      #9bbf58;
+  --zs-ember1:       #fff1c2;
+  --zs-ember2:       #ffc56b;
+  --zs-ember3:       #f4a040;
+  --zs-ember4:       #c46a18;
+  --zs-ember5:       #5e2a08;
+}
+
+/* Hollow — lichen grey on near-black */
+.zs-hollow {
+  --zs-bg:           #0d0e0a;
+  --zs-bg-elevated:  #14160f;
+  --zs-bg-panel:     #181a13;
+  --zs-bg-inset:     #070806;
+  --zs-divider:      #2c2e22;
+  --zs-text:         #c8c6b0;
+  --zs-text-dim:     #7a7866;
+  --zs-text-faint:   #46453a;
+  --zs-text-fog:     #2a2a23;
+  --zs-accent:       #a8b07a;
+  --zs-accent-glow:  rgba(168,176,122,0.45);
+  --zs-accent-deep:  #6e7a45;
+  --zs-accent-soft:  #3a3e26;
+  --zs-danger:       #9a4640;
+  --zs-success:      #7a8a5a;
+  --zs-warning:      #b89a5a;
+  --zs-prompt:       #a8b07a;
+  --zs-cursor:       #c8c6b0;
+  --zs-hp:           #9a4640;
+  --zs-mp:           #5a7280;
+  --zs-stamina:      #7a8a5a;
+  --zs-ember1:       #dadcc0;
+  --zs-ember2:       #bcbf90;
+  --zs-ember3:       #a8b07a;
+  --zs-ember4:       #6e7a45;
+  --zs-ember5:       #2c3018;
+}
+
+/* Abyss — eldritch violet on void (locked) */
+.zs-abyss {
+  --zs-bg:           #060410;
+  --zs-bg-elevated:  #0c0a1a;
+  --zs-bg-panel:     #100e22;
+  --zs-bg-inset:     #020108;
+  --zs-divider:      #221d36;
+  --zs-text:         #b5b8d8;
+  --zs-text-dim:     #6a6890;
+  --zs-text-faint:   #34324a;
+  --zs-text-fog:     #1d1b2c;
+  --zs-accent:       #8b6dff;
+  --zs-accent-glow:  rgba(139,109,255,0.55);
+  --zs-accent-deep:  #5232c8;
+  --zs-accent-soft:  #2a1d56;
+  --zs-danger:       #d04a7e;
+  --zs-success:      #4dd4c0;
+  --zs-warning:      #c79bff;
+  --zs-prompt:       #8b6dff;
+  --zs-cursor:       #b5b8d8;
+  --zs-hp:           #d04a7e;
+  --zs-mp:           #4dd4c0;
+  --zs-stamina:      #c79bff;
+  --zs-ember1:       #e5d8ff;
+  --zs-ember2:       #b89dff;
+  --zs-ember3:       #8b6dff;
+  --zs-ember4:       #5232c8;
+  --zs-ember5:       #1a0e3a;
+}
+
+/* ─── Animations & CRT Effects ───────────────────────────────────────────── */
+
+@keyframes zs-flicker {
+  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
+  20%, 24%, 55% { opacity: 0.92; }
+}
+
+@keyframes zs-cursor-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+@keyframes zs-scanlines-subtle {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(2px); }
+}
+
+/* ─── Base Styles ────────────────────────────────────────────────────────── */
+
+* { box-sizing: border-box; }
+
+html, body {
   margin: 0;
   padding: 0;
+  height: 100%;
+  width: 100%;
 }
+
+body {
+  background-color: var(--zs-bg);
+  color: var(--zs-text);
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.4;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Scanlines overlay */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0px,
+    rgba(0, 0, 0, 0) 1px,
+    rgba(0, 0, 0, 0.18) 1px,
+    rgba(0, 0, 0, 0.18) 2px
+  );
+  z-index: 100;
+  mix-blend-mode: multiply;
+}
+
+/* Vignette overlay */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 55%,
+    rgba(0, 0, 0, 0.35) 100%
+  );
+  z-index: 99;
+}
+
+/* Flicker effect */
+body.zs-flicker {
+  animation: zs-flicker 6s infinite steps(1);
+}
+
+/* ─── Layout ─────────────────────────────────────────────────────────────── */
 
 .CLI {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  padding: 10px;
-  box-sizing: border-box;
+  padding: 16px;
+  gap: 10px;
+  position: relative;
+  z-index: 1;
 }
 
 .Toolbar {
   flex-shrink: 0;
-  margin-bottom: 10px;
-  height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: auto;
+  padding: 8px 12px;
+  background-color: var(--zs-bg-panel);
+  border: 1px solid var(--zs-divider);
+  border-radius: 2px;
+  font-size: 12px;
 }
+
+.Toolbar-title {
+  color: var(--zs-accent);
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.Toolbar-group {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.HUD-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+}
+
+.HUD-label {
+  color: var(--zs-text-dim);
+  min-width: 24px;
+}
+
+.HUD-track {
+  width: 80px;
+  height: 8px;
+  background-color: var(--zs-bg-inset);
+  border: 1px solid var(--zs-divider);
+  border-radius: 1px;
+  overflow: hidden;
+  position: relative;
+}
+
+.HUD-fill {
+  height: 100%;
+  background-color: var(--zs-hp);
+  border-radius: 1px;
+  transition: width 200ms ease-out;
+}
+
+.HUD-value {
+  font-variant-numeric: tabular-nums;
+  min-width: 24px;
+  text-align: right;
+}
+
+.Theme-switcher {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.Theme-button {
+  padding: 4px 8px;
+  background-color: var(--zs-bg-inset);
+  color: var(--zs-text-dim);
+  border: 1px solid var(--zs-divider);
+  border-radius: 2px;
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 150ms;
+}
+
+.Theme-button:hover {
+  color: var(--zs-text);
+  border-color: var(--zs-accent);
+}
+
+.Theme-button.active {
+  background-color: var(--zs-accent-soft);
+  color: var(--zs-accent);
+  border-color: var(--zs-accent);
+}
+
+.Theme-button[data-locked]::after {
+  content: ' 🔒';
+}
+
+/* ─── History ────────────────────────────────────────────────────────────── */
 
 #history {
   flex: 1;
   overflow-y: auto;
-  margin-bottom: 10px;
+  overflow-x: hidden;
+  padding: 12px;
+  background-color: var(--zs-bg-inset);
+  border: 1px solid var(--zs-divider);
+  border-radius: 2px;
   white-space: pre-wrap;
   word-wrap: break-word;
-  font-size: 14px;
-  line-height: 1.4;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--zs-text);
 }
+
+#history::-webkit-scrollbar {
+  width: 6px;
+}
+
+#history::-webkit-scrollbar-track {
+  background: var(--zs-bg);
+}
+
+#history::-webkit-scrollbar-thumb {
+  background: var(--zs-divider);
+  border-radius: 3px;
+}
+
+#history::-webkit-scrollbar-thumb:hover {
+  background: var(--zs-accent-soft);
+}
+
+.history-echo {
+  color: var(--zs-text-dim);
+  margin-bottom: 4px;
+}
+
+.history-echo::before {
+  content: '> ';
+}
+
+.history-narrative {
+  color: var(--zs-text);
+  margin-bottom: 6px;
+}
+
+.history-system {
+  color: var(--zs-accent);
+  margin-bottom: 6px;
+}
+
+.history-system::before {
+  content: '[ system ] ';
+  color: var(--zs-text-faint);
+  font-size: 11px;
+}
+
+.history-damage {
+  color: var(--zs-danger);
+  margin-bottom: 4px;
+}
+
+.history-error {
+  color: var(--zs-danger);
+  margin-bottom: 4px;
+}
+
+.history-error::before {
+  content: '✗ ';
+  margin-right: 4px;
+}
+
+.history-fog {
+  color: var(--zs-text-fog);
+  font-style: italic;
+  margin: 8px 0 0 0;
+}
+
+/* ─── Prompt ─────────────────────────────────────────────────────────────── */
 
 #prompt-container {
   display: flex;
   flex-shrink: 0;
   align-items: center;
+  gap: 0;
+  padding: 8px 12px;
+  background-color: var(--zs-bg-inset);
+  border: 1px solid var(--zs-divider);
+  border-radius: 2px;
+  height: auto;
 }
 
 #prompt-prefix {
-  margin-right: 5px;
+  color: var(--zs-prompt);
+  margin-right: 2px;
   flex-shrink: 0;
+  font-weight: 400;
 }
 
 #input {
   flex: 1;
-  background-color: #0a0a23;
-  color: #ffffff;
+  background-color: transparent;
+  color: var(--zs-text);
   border: none;
   outline: none;
-  font-family: 'Courier New', monospace;
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 13px;
+  font-weight: 400;
+  padding: 0;
+  margin: 0;
+  line-height: 1.4;
+}
+
+#input::placeholder {
+  color: var(--zs-text-faint);
+}
+
+#input::-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px var(--zs-bg-inset) inset;
+  -webkit-text-fill-color: var(--zs-text);
+}
+
+/* Cursor indicator when not focused */
+#prompt-container.idle::after {
+  content: '_';
+  color: var(--zs-cursor);
+  animation: zs-cursor-blink 1s steps(1) infinite;
+  margin-left: 1px;
+}
+
+/* ─── Type Scale Helpers ─────────────────────────────────────────────────── */
+
+.zs-display {
+  font-size: 32px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  line-height: 1.2;
+  color: var(--zs-accent);
+}
+
+.zs-title {
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.zs-heading {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.zs-body {
   font-size: 14px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.zs-meta {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--zs-text-dim);
+}
+
+.zs-fog {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--zs-text-fog);
+  font-style: italic;
+}
+
+/* ─── Text Effects ───────────────────────────────────────────────────────── */
+
+.zs-glow {
+  text-shadow:
+    0 0 0.5px currentColor,
+    0 0 4px var(--zs-accent-glow);
+  color: var(--zs-accent);
+}
+
+.zs-glow-strong {
+  text-shadow:
+    0 0 1px currentColor,
+    0 0 8px var(--zs-accent-glow),
+    0 0 16px var(--zs-accent-glow);
+  color: var(--zs-accent);
+}
+
+.zs-danger {
+  color: var(--zs-danger);
+}
+
+.zs-success {
+  color: var(--zs-success);
+}
+
+.zs-warning {
+  color: var(--zs-warning);
+}
+
+.zs-dim {
+  color: var(--zs-text-dim);
+}
+
+.zs-faint {
+  color: var(--zs-text-faint);
+}
+
+.zs-fog-text {
+  color: var(--zs-text-fog);
+}
+
+/* ─── Utility ────────────────────────────────────────────────────────────── */
+
+.zs-italic {
+  font-style: italic;
+}
+
+.zs-bold {
+  font-weight: 600;
 }

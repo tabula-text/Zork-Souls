@@ -2,16 +2,35 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="./styles.css">
     <title>Zork Souls</title>
   </head>
-  <body>
+  <body class="zs-bonfire">
     <div class="CLI">
-      <div class="Toolbar"></div>
+      <div class="Toolbar">
+        <div class="Toolbar-title">⚹ ZORK SOULS</div>
+        <div class="Toolbar-group">
+          <div class="Theme-switcher">
+            <button class="Theme-button active" data-theme="bonfire">Bonfire</button>
+            <button class="Theme-button" data-theme="hollow">Hollow</button>
+            <button class="Theme-button" data-theme="abyss" data-locked>Abyss</button>
+          </div>
+        </div>
+        <div class="Toolbar-group">
+          <div class="HUD-bar">
+            <span class="HUD-label">HP</span>
+            <div class="HUD-track">
+              <div class="HUD-fill" style="width: 100%;" id="hp-bar"></div>
+            </div>
+            <span class="HUD-value"><span id="hp-current">100</span>/<span id="hp-max">100</span></span>
+          </div>
+        </div>
+      </div>
       <div id="history"></div>
-      <div id="prompt-container">
+      <div id="prompt-container" class="idle">
         <span id="prompt-prefix">> </span>
-        <input id="input" type="text" autofocus spellcheck="false">
+        <input id="input" type="text" autofocus spellcheck="false" placeholder="">
       </div>
     </div>
     <script src="./script.js"></script>
