@@ -1,5 +1,36 @@
 # Zork Souls Changelog
 
+## 2026-05-16
+
+### ✅ Completed
+
+**Design System Implementation (v1 → v2 polish)**
+
+*v1 — initial implementation:*
+- 3 lore-named themes with complete color palettes (Bonfire / Hollow / Abyss)
+- IBM Plex Mono typography with 6-level type scale
+- Semantic color tokens (25+ per theme)
+- CRT effects: scanlines, vignette, flicker, text glow
+- Theme switcher with lock system + localStorage persistence
+
+*v2 — visual polish (matched to design reference):*
+- **Bonfire ASCII visual** — coiled sword (12-row pre) rotated -6°, smoldering flame, halo glow, 6 animated cinder particles (wink + drift). Universal warm palette regardless of theme (eternal flame).
+- **ASCII HUD bars** — `█` filled / `░` empty with glyph icons (♥ HP, ✦ MP, ◆ Stamina) — replacing prior plain div bars
+- **3-column toolbar** — title (with letter-spacing 4px + accent glow) · centered HUD · audio + theme cluster
+- **Location banner** — `── Undead Asylum ──` with turn counter and meta line ("fog descending")
+- **System message glow** — `[ system ]` prefix + accent text-shadow for important moments
+- **Italic flavor text** — for examinations and welcome message
+- **Removed history container border** — content flows naturally with proper margins
+- **Top-border prompt** — divider line separates prompt from history (matches design)
+- Turn counter increments per command
+
+**Code Quality**
+- XSS-safe output rendering (DOM construction, no innerHTML for user data)
+- Handler return values support `{ text, className, showBonfire }` objects
+- All CSS scoped to `.zs-{theme}` for easy runtime switching
+
+---
+
 ## 2026-05-15
 
 ### ✅ Completed

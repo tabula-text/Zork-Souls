@@ -1,0 +1,40 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - generic [ref=e5]: ZORK SOULS
+      - generic [ref=e6]: v0.1
+    - generic [ref=e7]:
+      - generic [ref=e8]:
+        - generic [ref=e9]: ♥
+        - generic [ref=e10]: ██████████
+        - generic [ref=e11]:
+          - text: "100"
+          - generic [ref=e12]: /100
+      - generic [ref=e13]: │
+      - generic [ref=e14]:
+        - generic [ref=e15]: ✦
+        - generic [ref=e16]: ██████████
+        - generic [ref=e17]:
+          - text: "50"
+          - generic [ref=e18]: /50
+      - generic [ref=e19]: │
+      - generic [ref=e20]:
+        - generic [ref=e21]: ◆
+        - generic [ref=e22]: ██████████
+        - generic [ref=e23]:
+          - text: "100"
+          - generic [ref=e24]: /100
+    - generic [ref=e25]:
+      - generic [ref=e26]: ♪ on
+      - generic [ref=e27]: │
+      - generic [ref=e28]:
+        - button "● bonfire" [ref=e29] [cursor=pointer]
+        - button "hollow" [ref=e30] [cursor=pointer]
+        - button "abyss 🔒" [ref=e31] [cursor=pointer]
+  - generic [ref=e32]:
+    - generic [ref=e33]: ── Undead Asylum ──
+    - generic [ref=e34]: turn 0 · fog descending
+  - generic [ref=e36]: Welcome, Undead. You awaken in a familiar darkness. Type 'help' for guidance.
+  - generic [ref=e37]:
+    - generic [ref=e38]: ">"
+    - textbox [active] [ref=e39]

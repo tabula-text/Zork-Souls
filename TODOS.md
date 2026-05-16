@@ -1,8 +1,11 @@
 # Zork Souls TODOs
 
-## Phase 1: Design & Atmosphere (Next)
+## Phase 1: Design & Atmosphere
 
-- [ ] Define design tokens with claude design (colors, spacing, typography for ASCII aesthetic)
+- [x] Define design tokens with claude design (colors, spacing, typography for ASCII aesthetic) — **2026-05-16**
+  - 3 themes with full color palettes, type scale, CRT effects
+  - IBM Plex Mono typography, semantic color system
+  - Theme switcher + persistence implemented
 - [ ] Sketch room graph and world map (5-10 starting rooms minimum)
 - [ ] Write lore snippets for locations and NPCs (Miyazaki-inspired vague descriptions)
 
@@ -39,5 +42,7 @@
 
 - All game logic is placeholder/stub for now — safe to refactor as real mechanics emerge
 - Commands like `strat` and `cheese` are flavor text; real combat will replace them
-- Design tokens pending — CSS is minimal and functional until then
-- No external dependencies — keep it vanilla
+- Design tokens complete — CSS now fully themed with 3 switchable color palettes
+- No external dependencies — keep it vanilla (only Google Fonts for IBM Plex Mono)
+- Theme persistence via localStorage; Abyss theme requires player unlock
+- Next phase: world design (rooms, NPCs, lore) can now use the established visual language
